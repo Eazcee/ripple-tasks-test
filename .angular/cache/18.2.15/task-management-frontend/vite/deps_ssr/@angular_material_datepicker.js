@@ -10,6 +10,9 @@ import {
   TemplatePortal
 } from "./chunk-IVAU7WHB.js";
 import {
+  CdkScrollableModule
+} from "./chunk-2BR3GBA7.js";
+import {
   MatButton,
   MatButtonModule,
   MatIconButton
@@ -38,9 +41,6 @@ import {
   transition,
   trigger
 } from "./chunk-Q66GDLIQ.js";
-import {
-  CdkScrollableModule
-} from "./chunk-2BR3GBA7.js";
 import {
   A11yModule,
   BACKSPACE,
