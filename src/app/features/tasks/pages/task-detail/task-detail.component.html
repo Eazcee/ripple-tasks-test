@@ -1,1 +1,115 @@
-<p>task-detail works!</p>
+<!-- Task Detail Component Template -->
+<div class="task-detail-container">
+  
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading task details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h2>Error Loading Task</h2>
+    <p>{{ errorMessage }}</p>
+    <button (click)="goBack()" class="btn btn-primary">Go Back</button>
+  </div>
+
+  <!-- Task Details Content -->
+  <div *ngIf="!loading && !error && task" class="task-detail-content">
+    
+    <!-- Header Section -->
+    <div class="task-header">
+      <button (click)="goBack()" class="btn btn-secondary back-btn">
+        ← Back to Tasks
+      </button>
+      <div class="task-actions">
+        <button (click)="editTask()" class="btn btn-primary">
+          ✏️ Edit Task
+        </button>
+        <button (click)="deleteTask()" class="btn btn-danger">
+          🗑️ Delete Task
+        </button>
+      </div>
+    </div>
+
+    <!-- Task Title and Status -->
+    <div class="task-title-section">
+      <h1 class="task-title">{{ task.title }}</h1>
+      <div class="task-status-badge" [ngClass]="getStatusClass(task.status)">
+        {{ task.status }}
+      </div>
+    </div>
+
+    <!-- Task Information Grid -->
+    <div class="task-info-grid">
+      
+      <!-- Priority Section -->
+      <div class="info-card">
+        <h3>Priority</h3>
+        <div class="priority-badge" [ngClass]="getPriorityClass(task.priority)">
+          {{ task.priority }}
+        </div>
+      </div>
+
+      <!-- Due Date Section -->
+      <div class="info-card">
+        <h3>Due Date</h3>
+        <div class="due-date" [ngClass]="{'overdue': isOverdue(task.dueDate)}">
+          {{ formatDate(task.dueDate) }}
+        </div>
+        <small *ngIf="isOverdue(task.dueDate)" class="overdue-warning">
+          ⚠️ This task is overdue!
+        </small>
+      </div>
+
+      <!-- Created Date -->
+      <div class="info-card">
+        <h3>Created</h3>
+        <div class="date-info">
+          {{ formatDateTime(task.createdAt || '') }}
+        </div>
+      </div>
+
+      <!-- Last Updated -->
+      <div class="info-card">
+        <h3>Last Updated</h3>
+        <div class="date-info">
+          {{ formatDateTime(task.updatedAt || '') }}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Description Section -->
+    <div class="description-section" *ngIf="task.description">
+      <h3>Description</h3>
+      <div class="description-content">
+        {{ task.description }}
+      </div>
+    </div>
+
+    <!-- No Description Message -->
+    <div class="description-section" *ngIf="!task.description">
+      <h3>Description</h3>
+      <div class="no-description">
+        <em>No description provided for this task.</em>
+      </div>
+    </div>
+
+    <!-- Task ID (for reference) -->
+    <div class="task-id-section">
+      <small>Task ID: {{ task.id }}</small>
+    </div>
+
+  </div>
+
+  <!-- No Task Found -->
+  <div *ngIf="!loading && !error && !task" class="no-task-container">
+    <div class="no-task-icon">📋</div>
+    <h2>Task Not Found</h2>
+    <p>The task you're looking for doesn't exist or has been removed.</p>
+    <button (click)="goBack()" class="btn btn-primary">Go Back to Tasks</button>
+  </div>
+
+</div>

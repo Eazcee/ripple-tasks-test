@@ -9,13 +9,16 @@ namespace TaskManagement.Api.Controllers;
 [Route("api/[controller]")]
 public class TasksController(AppDbContext db) : ControllerBase
 {
+    // Get all tasks from the database
     [HttpGet]
     public Task<List<TaskItem>> Get() => db.Tasks.AsNoTracking().ToListAsync();
 
+    // Get a specific task by its ID
     [HttpGet("{id:int}")]
     public async Task<ActionResult<TaskItem>> Get(int id)
         => await db.Tasks.FindAsync(id) is { } item ? item : NotFound();
 
+    // Create a new task
     [HttpPost]
     public async Task<ActionResult<TaskItem>> Post(TaskItem item)
     {
@@ -24,6 +27,7 @@ public class TasksController(AppDbContext db) : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
     }
 
+    // Update an existing task
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Put(int id, TaskItem update)
     {
@@ -33,6 +37,7 @@ public class TasksController(AppDbContext db) : ControllerBase
         return NoContent();
     }
 
+    // Delete a task by its ID
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -45,7 +50,7 @@ public class TasksController(AppDbContext db) : ControllerBase
 
     // TASK 6 - IMPLEMENTED FEATURES
     
-    // 1. Retrieve tasks due within the next 7 days
+    // Get tasks due within the next 7 days
     [HttpGet("due-next-7-days")]
     public async Task<ActionResult<List<TaskItem>>> GetTasksDueInNext7Days()
     {
@@ -58,7 +63,7 @@ public class TasksController(AppDbContext db) : ControllerBase
         return Ok(tasks);
     }
     
-    // 2. Get a count of tasks by priority level
+    // Get count of tasks grouped by priority level
     [HttpGet("count-by-priority")]
     public async Task<ActionResult<object>> GetTaskCountByPriority()
     {
@@ -71,7 +76,7 @@ public class TasksController(AppDbContext db) : ControllerBase
         return Ok(priorityCounts);
     }
     
-    // 3. Find tasks that are overdue
+    // Find all overdue tasks that aren't completed
     [HttpGet("overdue")]
     public async Task<ActionResult<List<TaskItem>>> GetOverdueTasks()
     {
@@ -83,7 +88,7 @@ public class TasksController(AppDbContext db) : ControllerBase
         return Ok(overdueTasks);
     }
     
-    // 4. Update multiple tasks' status in a single query
+    // Update status of multiple tasks at once
     [HttpPut("bulk-update-status")]
     public async Task<IActionResult> BulkUpdateTaskStatus([FromBody] BulkUpdateRequest request)
     {
