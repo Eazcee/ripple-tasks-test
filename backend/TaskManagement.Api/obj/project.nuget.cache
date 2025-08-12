@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4xrArtpi8K8=",
+  "dgSpecHash": "g02OTg0BrwA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\TaskManagement.Api\\TaskManagement.Api.csproj",
+  "projectFilePath": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\taskmanagement.api\\TaskManagement.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\EdgarPC\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\EdgarPC\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

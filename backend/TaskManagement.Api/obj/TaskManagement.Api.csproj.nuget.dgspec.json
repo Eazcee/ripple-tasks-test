@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\TaskManagement.Api\\TaskManagement.Api.csproj": {}
+    "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\taskmanagement.api\\TaskManagement.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\TaskManagement.Api\\TaskManagement.Api.csproj": {
+    "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\taskmanagement.api\\TaskManagement.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\TaskManagement.Api\\TaskManagement.Api.csproj",
+        "projectUniqueName": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\taskmanagement.api\\TaskManagement.Api.csproj",
         "projectName": "TaskManagement.Api",
-        "projectPath": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\TaskManagement.Api\\TaskManagement.Api.csproj",
+        "projectPath": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\taskmanagement.api\\TaskManagement.Api.csproj",
         "packagesPath": "C:\\Users\\EdgarPC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\TaskManagement.Api\\obj\\",
+        "outputPath": "C:\\Users\\EdgarPC\\Documents\\GitHub\\ripple-tasks-test\\backend\\taskmanagement.api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\EdgarPC\\AppData\\Roaming\\NuGet\\NuGet.Config"

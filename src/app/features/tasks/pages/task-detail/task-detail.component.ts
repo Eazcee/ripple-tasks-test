@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Task } from '../../../../models/task.model';
 import { TaskService } from '../../../../services/task.service';
@@ -7,12 +16,23 @@ import { TaskService } from '../../../../services/task.service';
 /**
  * Component for displaying detailed information about a specific task.
  * Fetches task data based on the ID from the route parameters and displays
- * all task properties in a user-friendly format.
+ * all task properties in a user-friendly format with inline editing capabilities.
  */
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule
+  ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
 })
@@ -29,12 +49,31 @@ export class TaskDetailComponent implements OnInit {
   
   // Error message to display
   errorMessage = '';
+  
+  // Edit mode state
+  isEditMode = false;
+  
+  // Form for editing
+  editForm: FormGroup;
+  
+  // Saving state
+  saving = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private taskService: TaskService
-  ) {}
+    private taskService: TaskService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
+  ) {
+    this.editForm = this.fb.group({
+      title: ['', Validators.required],
+      description: [''],
+      dueDate: [null, Validators.required],
+      priority: ['Medium', Validators.required],
+      status: ['Pending', Validators.required]
+    });
+  }
 
   /**
    * Lifecycle hook that is called after data-bound properties are initialized.
@@ -74,12 +113,28 @@ export class TaskDetailComponent implements OnInit {
       next: (task: Task) => {
         this.task = task;
         this.loading = false;
+        this.populateEditForm();
       },
       error: (err: any) => {
         this.handleError('Failed to load task details');
         console.error('Error loading task:', err);
       }
     });
+  }
+
+  /**
+   * Populates the edit form with current task data
+   */
+  private populateEditForm(): void {
+    if (this.task) {
+      this.editForm.patchValue({
+        title: this.task.title,
+        description: this.task.description || '',
+        dueDate: new Date(this.task.dueDate),
+        priority: this.task.priority,
+        status: this.task.status
+      });
+    }
   }
 
   /**
@@ -100,12 +155,57 @@ export class TaskDetailComponent implements OnInit {
   }
 
   /**
-   * Navigates to the edit page for the current task.
+   * Toggles edit mode on/off
    */
-  editTask(): void {
-    if (this.task?.id) {
-      this.router.navigate(['/tasks', this.task.id, 'edit']);
+  toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
+    if (this.isEditMode) {
+      this.populateEditForm();
     }
+  }
+
+  /**
+   * Saves the edited task
+   */
+  saveTask(): void {
+    if (this.editForm.valid && this.task?.id) {
+      this.saving = true;
+      const updatedTask: Task = {
+        ...this.task,
+        ...this.editForm.value
+      };
+
+      this.taskService.updateTask(this.task.id, updatedTask).subscribe({
+        next: (savedTask: Task) => {
+          this.task = savedTask;
+          this.isEditMode = false;
+          this.saving = false;
+          this.snackBar.open('Task updated successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        },
+        error: (err: any) => {
+          this.saving = false;
+          this.handleError('Failed to update task');
+          console.error('Error updating task:', err);
+          this.snackBar.open('Failed to update task. Please try again.', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        }
+      });
+    }
+  }
+
+  /**
+   * Cancels edit mode and reverts changes
+   */
+  cancelEdit(): void {
+    this.isEditMode = false;
+    this.populateEditForm();
   }
 
   /**
@@ -121,10 +221,20 @@ export class TaskDetailComponent implements OnInit {
         next: () => {
           // Navigate back to task list after successful deletion
           this.router.navigate(['/tasks']);
+          this.snackBar.open('Task deleted successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
         },
         error: (err: any) => {
           this.handleError('Failed to delete task');
           console.error('Error deleting task:', err);
+          this.snackBar.open('Failed to delete task. Please try again.', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
         }
       });
     }

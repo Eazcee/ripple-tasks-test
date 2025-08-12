@@ -123,6 +123,23 @@
   }
 }
 
+/* Edit Form Section */
+.edit-form-section {
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    
+    .title-field {
+      width: 100%;
+    }
+    
+    .status-field {
+      width: 200px;
+    }
+  }
+}
+
 /* Task Information Grid */
 .task-info-grid {
   display: grid;
@@ -145,6 +162,16 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin: 0 0 12px 0;
+  }
+  
+  /* Form fields in edit mode */
+  mat-form-field {
+    width: 100%;
+    
+    &.priority-field,
+    &.due-date-field {
+      width: 100%;
+    }
   }
 }
 
@@ -237,15 +264,17 @@
     padding: 16px;
     border-radius: 6px;
     border-left: 4px solid #667eea;
+    
+    &.no-description {
+      font-style: italic;
+      color: #a0aec0;
+      border: 1px dashed #cbd5e0;
+      border-left: 4px solid #cbd5e0;
+    }
   }
   
-  .no-description {
-    font-style: italic;
-    color: #a0aec0;
-    background-color: #f8fafc;
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px dashed #cbd5e0;
+  .description-field {
+    width: 100%;
   }
 }
 
@@ -303,16 +332,22 @@
   align-items: center;
   gap: 8px;
   
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
   
   &.btn-primary {
     background-color: #007bff;
     color: white;
     
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: #0056b3;
     }
   }
@@ -321,8 +356,17 @@
     background-color: #6c757d;
     color: white;
     
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: #545b62;
+    }
+  }
+  
+  &.btn-success {
+    background-color: #28a745;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: #1e7e34;
     }
   }
   
@@ -330,9 +374,20 @@
     background-color: #dc3545;
     color: white;
     
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: #c82333;
     }
+  }
+}
+
+/* Material Design Form Overrides */
+mat-form-field {
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+  
+  .mat-mdc-text-field-wrapper {
+    background-color: white;
   }
 }
 
@@ -349,6 +404,7 @@
     
     .task-actions {
       justify-content: center;
+      flex-wrap: wrap;
     }
   }
   
@@ -363,5 +419,13 @@
   
   .info-card {
     padding: 16px;
+  }
+  
+  .edit-form-section {
+    .edit-form {
+      .status-field {
+        width: 100%;
+      }
+    }
   }
 }

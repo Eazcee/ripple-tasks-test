@@ -2,7 +2,7 @@ import {
   ScrollDispatcher,
   ScrollingModule,
   ViewportRuler
-} from "./chunk-VMOCEMP6.js";
+} from "./chunk-T5HLEZ56.js";
 import {
   BidiModule,
   Directionality,
@@ -14,7 +14,7 @@ import {
   coerceCssPixelValue,
   hasModifierKey,
   supportsScrollBehavior
-} from "./chunk-4TJ77X27.js";
+} from "./chunk-YHFRPDSK.js";
 import {
   DOCUMENT,
   Location
@@ -3376,6 +3376,7 @@ var FullscreenOverlayContainer = class _FullscreenOverlayContainer extends Overl
 export {
   ComponentPortal,
   TemplatePortal,
+  BasePortalOutlet,
   CdkPortalOutlet,
   PortalModule,
   OverlayConfig,
@@ -3385,4 +3386,4 @@ export {
   CdkConnectedOverlay,
   OverlayModule
 };
-//# sourceMappingURL=chunk-AJM4E2HL.js.map
+//# sourceMappingURL=chunk-PLB4HE6Y.js.map
