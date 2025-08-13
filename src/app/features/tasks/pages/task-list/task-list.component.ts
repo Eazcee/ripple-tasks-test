@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 import { Task } from '../../../../models/task.model';
@@ -10,61 +13,9 @@ import { Task } from '../../../../models/task.model';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, RouterModule],
-  template: `
-    <div class="task-list-container">
-      <table mat-table [dataSource]="tasks">
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef>Title</th>
-          <td mat-cell *matCellDef="let task">{{task.title}}</td>
-        </ng-container>
-        <ng-container matColumnDef="dueDate">
-          <th mat-header-cell *matHeaderCellDef>Due Date</th>
-          <td mat-cell *matCellDef="let task">{{task.dueDate | date}}</td>
-        </ng-container>
-        <ng-container matColumnDef="priority">
-          <th mat-header-cell *matHeaderCellDef>Priority</th>
-          <td mat-cell *matCellDef="let task">{{task.priority}}</td>
-        </ng-container>
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let task">{{task.status}}</td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let task">
-            <button mat-icon-button [routerLink]="[task.id]">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-      <button mat-fab color="primary" class="fab-button" routerLink="new">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-  `,
-  styles: [`
-    .task-list-container {
-      padding: 20px;
-      position: relative;
-    }
-    table {
-      width: 100%;
-    }
-    .fab-button {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-    }
-  `]
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatMenuModule, MatSelectModule, MatDividerModule, RouterModule],
+    templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.scss'
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
@@ -73,20 +24,77 @@ export class TaskListComponent implements OnInit {
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.loadAllTasks();
   }
 
-  loadTasks(): void {
+  loadAllTasks(): void {
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;
+    });
+  }
+
+  loadTasksDueInNext7Days(): void {
+    // Since we don't have a direct endpoint for this, we'll filter from all tasks
+    this.taskService.getTasks().subscribe(tasks => {
+      const sevenDaysFromNow = new Date();
+      sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+      
+      this.tasks = tasks.filter(task => {
+        const dueDate = new Date(task.dueDate);
+        return dueDate >= new Date() && dueDate <= sevenDaysFromNow;
+      });
+    });
+  }
+
+  loadOverdueTasks(): void {
+    // Since we don't have a direct endpoint for this, we'll filter from all tasks
+    this.taskService.getTasks().subscribe(tasks => {
+      this.tasks = tasks.filter(task => {
+        const dueDate = new Date(task.dueDate);
+        return dueDate < new Date() && task.status !== 'Completed';
+      });
+    });
+  }
+
+  sortByPriority(direction: 'high' | 'low'): void {
+    this.taskService.getTasks().subscribe(tasks => {
+      this.tasks = tasks.sort((a, b) => {
+        const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+        const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
+        const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
+        
+        if (direction === 'high') {
+          return bPriority - aPriority; // High to Low
+        } else {
+          return aPriority - bPriority; // Low to High
+        }
+      });
     });
   }
 
   deleteTask(id: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.taskService.deleteTask(id).subscribe(() => {
-        this.loadTasks();
+        this.loadAllTasks();
       });
+    }
+  }
+
+  getPriorityClass(priority: string): string {
+    switch (priority.toLowerCase()) {
+      case 'high': return 'priority-high';
+      case 'medium': return 'priority-medium';
+      case 'low': return 'priority-low';
+      default: return 'priority-medium';
+    }
+  }
+
+  getStatusClass(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'completed': return 'status-completed';
+      case 'inprogress': return 'status-in-progress';
+      case 'pending': return 'status-pending';
+      default: return 'status-pending';
     }
   }
 }
