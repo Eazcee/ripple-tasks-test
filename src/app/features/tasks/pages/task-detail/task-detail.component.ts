@@ -185,6 +185,8 @@ export class TaskDetailComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'top'
           });
+          // Navigate back to task list after successful save
+          this.router.navigate(['/tasks']);
         },
         error: (err: any) => {
           this.saving = false;
