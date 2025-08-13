@@ -59,114 +59,145 @@
       </div>
     </div>
 
-    <!-- Task Title and Status -->
-    <div class="task-title-section">
-      <!-- View Mode -->
-      <div *ngIf="!isEditMode">
+    <!-- View Mode Content -->
+    <div *ngIf="!isEditMode">
+      <!-- Task Title and Status -->
+      <div class="task-title-section">
         <h1 class="task-title">{{ task.title }}</h1>
         <div class="task-status-badge" [ngClass]="getStatusClass(task.status)">
           {{ task.status }}
         </div>
       </div>
-      
-      <!-- Edit Mode -->
-      <div *ngIf="isEditMode" class="edit-form-section">
-        <form [formGroup]="editForm" class="edit-form">
-          <mat-form-field appearance="outline" class="title-field">
-            <mat-label>Title</mat-label>
-            <input matInput formControlName="title" required>
-            <mat-error *ngIf="editForm.get('title')?.hasError('required')">
-              Title is required
-            </mat-error>
-          </mat-form-field>
 
-          <mat-form-field appearance="outline" class="status-field">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status" required>
-              <mat-option value="Pending">Pending</mat-option>
-              <mat-option value="InProgress">In Progress</mat-option>
-              <mat-option value="Completed">Completed</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form>
+      <!-- Task Information Grid -->
+      <div class="task-info-grid">
+        
+        <!-- Priority Section -->
+        <div class="info-card">
+          <h3>Priority</h3>
+          <div class="priority-badge" [ngClass]="getPriorityClass(task.priority)">
+            {{ task.priority }}
+          </div>
+        </div>
+
+        <!-- Due Date Section -->
+        <div class="info-card">
+          <h3>Due Date</h3>
+          <div class="due-date" [ngClass]="{'overdue': isOverdue(task.dueDate)}">
+            {{ formatDate(task.dueDate) }}
+          </div>
+          <small *ngIf="isOverdue(task.dueDate)" class="overdue-warning">
+            ⚠️ This task is overdue!
+          </small>
+        </div>
+
+        <!-- Created Date -->
+        <div class="info-card">
+          <h3>Created</h3>
+          <div class="date-info">
+            {{ formatDateTime(task.createdAt || '') }}
+          </div>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="info-card">
+          <h3>Last Updated</h3>
+          <div class="date-info">
+            {{ formatDateTime(task.updatedAt || '') }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Description Section -->
+      <div class="description-section">
+        <h3>Description</h3>
+        <div class="description-content" [ngClass]="{'no-description': !task.description}">
+          <span *ngIf="task.description">{{ task.description }}</span>
+          <em *ngIf="!task.description">No description provided for this task.</em>
+        </div>
       </div>
     </div>
 
-    <!-- Task Information Grid -->
-    <div class="task-info-grid">
-      
-      <!-- Priority Section -->
-      <div class="info-card">
-        <h3>Priority</h3>
-        <!-- View Mode -->
-        <div *ngIf="!isEditMode" class="priority-badge" [ngClass]="getPriorityClass(task.priority)">
-          {{ task.priority }}
-        </div>
-        <!-- Edit Mode -->
-        <mat-form-field *ngIf="isEditMode" appearance="outline" class="priority-field">
-          <mat-label>Priority</mat-label>
-          <mat-select formControlName="priority" required>
-            <mat-option value="Low">Low</mat-option>
-            <mat-option value="Medium">Medium</mat-option>
-            <mat-option value="High">High</mat-option>
+    <!-- Edit Mode Content -->
+    <form *ngIf="isEditMode" [formGroup]="editForm" class="edit-form-container">
+      <!-- Task Title and Status -->
+      <div class="task-title-section">
+        <mat-form-field appearance="outline" class="title-field">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" required>
+          <mat-error *ngIf="editForm.get('title')?.hasError('required')">
+            Title is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="status-field">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option value="Pending">Pending</mat-option>
+            <mat-option value="InProgress">In Progress</mat-option>
+            <mat-option value="Completed">Completed</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
 
-      <!-- Due Date Section -->
-      <div class="info-card">
-        <h3>Due Date</h3>
-        <!-- View Mode -->
-        <div *ngIf="!isEditMode" class="due-date" [ngClass]="{'overdue': isOverdue(task.dueDate)}">
-          {{ formatDate(task.dueDate) }}
+      <!-- Task Information Grid -->
+      <div class="task-info-grid">
+        
+        <!-- Priority Section -->
+        <div class="info-card">
+          <h3>Priority</h3>
+          <mat-form-field appearance="outline" class="priority-field">
+            <mat-label>Priority</mat-label>
+            <mat-select formControlName="priority" required>
+              <mat-option value="Low">Low</mat-option>
+              <mat-option value="Medium">Medium</mat-option>
+              <mat-option value="High">High</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-        <small *ngIf="!isEditMode && isOverdue(task.dueDate)" class="overdue-warning">
-          ⚠️ This task is overdue!
-        </small>
-        <!-- Edit Mode -->
-        <mat-form-field *ngIf="isEditMode" appearance="outline" class="due-date-field">
-          <mat-label>Due Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="dueDate" required>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="editForm.get('dueDate')?.hasError('required')">
-            Due date is required
-          </mat-error>
+
+        <!-- Due Date Section -->
+        <div class="info-card">
+          <h3>Due Date</h3>
+          <mat-form-field appearance="outline" class="due-date-field">
+            <mat-label>Due Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="editForm.get('dueDate')?.hasError('required')">
+              Due date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Created Date -->
+        <div class="info-card">
+          <h3>Created</h3>
+          <div class="date-info">
+            {{ formatDateTime(task.createdAt || '') }}
+          </div>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="info-card">
+          <h3>Last Updated</h3>
+          <div class="date-info">
+            {{ formatDateTime(task.updatedAt || '') }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Description Section -->
+      <div class="description-section">
+        <h3>Description</h3>
+        <mat-form-field appearance="outline" class="description-field">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" placeholder="Enter task description..."></textarea>
         </mat-form-field>
       </div>
-
-      <!-- Created Date -->
-      <div class="info-card">
-        <h3>Created</h3>
-        <div class="date-info">
-          {{ formatDateTime(task.createdAt || '') }}
-        </div>
-      </div>
-
-      <!-- Last Updated -->
-      <div class="info-card">
-        <h3>Last Updated</h3>
-        <div class="date-info">
-          {{ formatDateTime(task.updatedAt || '') }}
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Description Section -->
-    <div class="description-section">
-      <h3>Description</h3>
-      <!-- View Mode -->
-      <div *ngIf="!isEditMode" class="description-content" [ngClass]="{'no-description': !task.description}">
-        <span *ngIf="task.description">{{ task.description }}</span>
-        <em *ngIf="!task.description">No description provided for this task.</em>
-      </div>
-      <!-- Edit Mode -->
-      <mat-form-field *ngIf="isEditMode" appearance="outline" class="description-field">
-        <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" rows="4" placeholder="Enter task description..."></textarea>
-      </mat-form-field>
-    </div>
+    </form>
 
     <!-- Task ID (for reference) -->
     <div class="task-id-section">
