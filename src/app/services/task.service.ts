@@ -31,4 +31,12 @@ export class TaskService {
   deleteTask(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Bulk update methods
+  bulkUpdateStatus(taskIds: number[], status: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/bulk-update-status`, {
+      taskIds,
+      newStatus: status
+    });
+  }
 } 

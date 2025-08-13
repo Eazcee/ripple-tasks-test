@@ -94,21 +94,14 @@ public class TasksController(AppDbContext db) : ControllerBase
     {
         if (request.TaskIds == null || !request.TaskIds.Any())
             return BadRequest("Task IDs are required");
-        
-        var tasksToUpdate = await db.Tasks
+
+        var affected = await db.Tasks
             .Where(t => request.TaskIds.Contains(t.Id))
-            .ToListAsync();
-        
-        if (!tasksToUpdate.Any())
-            return NotFound("No tasks found with the provided IDs");
-        
-        foreach (var task in tasksToUpdate)
-        {
-            task.Status = request.NewStatus;
-            task.UpdatedAt = DateTime.UtcNow;
-        }
-        
-        await db.SaveChangesAsync();
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(t => t.Status, _ => request.NewStatus)
+                .SetProperty(t => t.UpdatedAt, _ => DateTime.UtcNow));
+
+        if (affected == 0) return NotFound("No tasks found with the provided IDs");
         return NoContent();
     }
     

@@ -5756,6 +5756,8 @@ export {
   removeAriaReferencedId,
   ActiveDescendantKeyManager,
   FocusKeyManager,
+  InteractivityChecker,
+  FocusTrapFactory,
   CdkTrapFocus,
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
@@ -5811,4 +5813,4 @@ export {
   MatRippleLoader,
   _MatInternalFormField
 };
-//# sourceMappingURL=chunk-ZDMNVUQB.js.map
+//# sourceMappingURL=chunk-44DWS3GM.js.map

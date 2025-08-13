@@ -1,5 +1,9 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
+  BrowserModule,
+  DomRendererFactory2
+} from "./chunk-FSNCU3LC.js";
+import {
   AUTO_STYLE,
   AnimationGroupPlayer,
   AnimationMetadataType,
@@ -7,11 +11,7 @@ import {
   sequence,
   style,
   ɵPRE_STYLE
-} from "./chunk-Q66GDLIQ.js";
-import {
-  BrowserModule,
-  DomRendererFactory2
-} from "./chunk-FSNCU3LC.js";
+} from "./chunk-AP2EU5H7.js";
 import {
   DOCUMENT
 } from "./chunk-D3JV2RY4.js";
@@ -4133,4 +4133,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-QCHRBTDN.js.map
+//# sourceMappingURL=chunk-FZ7S6NFR.js.map

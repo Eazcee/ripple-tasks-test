@@ -3,6 +3,14 @@
   position: relative;
 }
 
+.loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
 .task-list-header {
   display: flex;
   justify-content: space-between;
@@ -13,6 +21,43 @@
 .task-list-header h2 {
   margin: 0;
   color: #2d3748;
+}
+
+.bulk-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bulk-action-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.bulk-action-info mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.bulk-action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.bulk-action-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .actions-header {
@@ -32,6 +77,12 @@
 
 table {
   width: 100%;
+}
+
+// Checkbox column styling
+.mat-column-select {
+  width: 48px;
+  text-align: center;
 }
 
 .priority-badge {

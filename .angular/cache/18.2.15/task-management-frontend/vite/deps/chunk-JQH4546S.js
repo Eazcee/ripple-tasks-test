@@ -1,23 +1,22 @@
-import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   animate,
   state,
   style,
   transition,
   trigger
-} from "./chunk-Q66GDLIQ.js";
+} from "./chunk-KF3NUXH2.js";
 import {
   Directionality,
   MatCommonModule,
   ObserversModule,
   Platform,
   coerceBooleanProperty
-} from "./chunk-WKFLROKL.js";
+} from "./chunk-44DWS3GM.js";
 import {
   CommonModule,
   DOCUMENT,
   NgTemplateOutlet
-} from "./chunk-D3JV2RY4.js";
+} from "./chunk-OQVSNKER.js";
 import {
   ANIMATION_MODULE_TYPE,
   Attribute,
@@ -35,16 +34,21 @@ import {
   Input,
   NgModule,
   NgZone,
+  Observable,
   Optional,
+  Subject,
+  Subscription,
   ViewChild,
   ViewEncapsulation$1,
   afterRender,
   computed,
   contentChild,
+  filter,
   inject,
-  require_cjs,
-  require_operators,
+  merge,
   setClassMetadata,
+  shareReplay,
+  takeUntil,
   ɵɵProvidersFeature,
   ɵɵStandaloneFeature,
   ɵɵadvance,
@@ -81,18 +85,9 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate,
   ɵɵviewQuery
-} from "./chunk-NCYSEW5N.js";
-import {
-  __toESM
-} from "./chunk-NQ4HTGF6.js";
-
-// node_modules/@angular/material/fesm2022/form-field.mjs
-var import_rxjs2 = __toESM(require_cjs(), 1);
-var import_operators2 = __toESM(require_operators(), 1);
+} from "./chunk-6QOE42Q6.js";
 
 // node_modules/@angular/cdk/fesm2022/observers/private.mjs
-var import_rxjs = __toESM(require_cjs(), 1);
-var import_operators = __toESM(require_operators(), 1);
 var loopLimitExceededErrorHandler = (e) => {
   if (e instanceof ErrorEvent && e.message === "ResizeObserver loop limit exceeded") {
     console.error(`${e.message}. This could indicate a performance issue with your app. See https://github.com/WICG/resize-observer/blob/master/explainer.md#error-handling`);
@@ -101,8 +96,8 @@ var loopLimitExceededErrorHandler = (e) => {
 var SingleBoxSharedResizeObserver = class {
   constructor(_box) {
     this._box = _box;
-    this._destroyed = new import_rxjs.Subject();
-    this._resizeSubject = new import_rxjs.Subject();
+    this._destroyed = new Subject();
+    this._resizeSubject = new Subject();
     this._elementObservables = /* @__PURE__ */ new Map();
     if (typeof ResizeObserver !== "undefined") {
       this._resizeObserver = new ResizeObserver((entries) => this._resizeSubject.next(entries));
@@ -115,7 +110,7 @@ var SingleBoxSharedResizeObserver = class {
    */
   observe(target) {
     if (!this._elementObservables.has(target)) {
-      this._elementObservables.set(target, new import_rxjs.Observable((observer) => {
+      this._elementObservables.set(target, new Observable((observer) => {
         const subscription = this._resizeSubject.subscribe(observer);
         this._resizeObserver?.observe(target, {
           box: this._box
@@ -126,15 +121,15 @@ var SingleBoxSharedResizeObserver = class {
           this._elementObservables.delete(target);
         };
       }).pipe(
-        (0, import_operators.filter)((entries) => entries.some((entry) => entry.target === target)),
+        filter((entries) => entries.some((entry) => entry.target === target)),
         // Share a replay of the last event so that subsequent calls to observe the same element
         // receive initial sizing info like the first one. Also enable ref counting so the
         // element will be automatically unobserved when there are no more subscriptions.
-        (0, import_operators.shareReplay)({
+        shareReplay({
           bufferSize: 1,
           refCount: true
         }),
-        (0, import_operators.takeUntil)(this._destroyed)
+        takeUntil(this._destroyed)
       ));
     }
     return this._elementObservables.get(target);
@@ -623,7 +618,7 @@ var MatFormFieldFloatingLabel = class _MatFormFieldFloatingLabel {
     this._resizeObserver = inject(SharedResizeObserver);
     this._ngZone = inject(NgZone);
     this._parent = inject(FLOATING_LABEL_PARENT);
-    this._resizeSubscription = new import_rxjs2.Subscription();
+    this._resizeSubscription = new Subscription();
   }
   ngOnDestroy() {
     this._resizeSubscription.unsubscribe();
@@ -1003,7 +998,7 @@ var MatFormField = class _MatFormField {
     this._labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
     this._hintLabelId = `mat-mdc-hint-${nextUniqueId++}`;
     this._subscriptAnimationState = "";
-    this._destroyed = new import_rxjs2.Subject();
+    this._destroyed = new Subject();
     this._isFocused = null;
     this._needsOutlineLabelOffsetUpdate = false;
     this._previousControl = null;
@@ -1075,7 +1070,7 @@ var MatFormField = class _MatFormField {
     });
     this._valueChanges?.unsubscribe();
     if (control.ngControl && control.ngControl.valueChanges) {
-      this._valueChanges = control.ngControl.valueChanges.pipe((0, import_operators2.takeUntil)(this._destroyed)).subscribe(() => this._changeDetectorRef.markForCheck());
+      this._valueChanges = control.ngControl.valueChanges.pipe(takeUntil(this._destroyed)).subscribe(() => this._changeDetectorRef.markForCheck());
     }
   }
   _checkPrefixAndSuffixTypes() {
@@ -1087,7 +1082,7 @@ var MatFormField = class _MatFormField {
   /** Initializes the prefix and suffix containers. */
   _initializePrefixAndSuffix() {
     this._checkPrefixAndSuffixTypes();
-    (0, import_rxjs2.merge)(this._prefixChildren.changes, this._suffixChildren.changes).subscribe(() => {
+    merge(this._prefixChildren.changes, this._suffixChildren.changes).subscribe(() => {
       this._checkPrefixAndSuffixTypes();
       this._changeDetectorRef.markForCheck();
     });
@@ -1141,7 +1136,7 @@ var MatFormField = class _MatFormField {
     }, {
       injector: this._injector
     });
-    this._dir.change.pipe((0, import_operators2.takeUntil)(this._destroyed)).subscribe(() => this._needsOutlineLabelOffsetUpdate = true);
+    this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => this._needsOutlineLabelOffsetUpdate = true);
   }
   /** Whether the floating label should always float or not. */
   _shouldAlwaysFloat() {
@@ -1647,4 +1642,4 @@ export {
   MatFormField,
   MatFormFieldModule
 };
-//# sourceMappingURL=chunk-OZXJFXQO.js.map
+//# sourceMappingURL=chunk-JQH4546S.js.map
