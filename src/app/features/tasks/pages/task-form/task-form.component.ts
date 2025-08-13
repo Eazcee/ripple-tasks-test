@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 
 @Component({
@@ -21,7 +21,8 @@ import { TaskService } from '../../../../services/task.service';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterModule
   ],
   template: `
     <div class="task-form-container">
