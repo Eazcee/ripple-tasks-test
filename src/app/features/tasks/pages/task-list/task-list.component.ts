@@ -11,6 +11,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatSortModule, MatSort } from '@angular/material/sort';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { RouterModule } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 import { Task } from '../../../../models/task.model';
@@ -37,6 +38,7 @@ import { Inject } from '@angular/core';
     MatProgressBarModule,
     MatSnackBarModule,
     MatSortModule,
+    MatPaginatorModule,
     RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -47,6 +49,7 @@ import { Inject } from '@angular/core';
 })
 export class TaskListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   
   tasks: Task[] = [];
   dataSource!: MatTableDataSource<Task>;
@@ -66,6 +69,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
         case 'title': return item.title.toLowerCase();
@@ -87,6 +91,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(tasks);
         if (this.sort) {
           this.dataSource.sort = this.sort;
+        }
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
         }
         this.isLoading = false;
       },
@@ -111,6 +118,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         if (this.sort) {
           this.dataSource.sort = this.sort;
         }
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
         this.isLoading = false;
       },
       error: () => {
@@ -130,6 +140,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(this.tasks);
         if (this.sort) {
           this.dataSource.sort = this.sort;
+        }
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
         }
         this.isLoading = false;
       },
@@ -157,6 +170,9 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(this.tasks);
         if (this.sort) {
           this.dataSource.sort = this.sort;
+        }
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
         }
         this.isLoading = false;
       },

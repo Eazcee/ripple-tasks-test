@@ -79,6 +79,17 @@ table {
   width: 100%;
 }
 
+// Pagination styling
+mat-paginator {
+  margin-top: 16px;
+  background-color: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.mat-mdc-paginator {
+  border-radius: 0 0 8px 8px;
+}
+
 // Checkbox column styling
 .mat-column-select {
   width: 48px;
