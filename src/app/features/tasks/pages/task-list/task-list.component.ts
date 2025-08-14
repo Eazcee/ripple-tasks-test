@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 import { Task } from '../../../../models/task.model';
@@ -39,6 +40,7 @@ import { Inject } from '@angular/core';
     MatSnackBarModule,
     MatSortModule,
     MatPaginatorModule,
+    MatInputModule,
     RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -56,6 +58,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['select', 'title', 'dueDate', 'priority', 'status', 'actions'];
   selectedTasks: Set<number> = new Set();
   isLoading = false;
+  searchTerm = '';
 
   constructor(
     private taskService: TaskService,
@@ -81,6 +84,11 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         default: return String(item[property as keyof Task] || '');
       }
     };
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   loadAllTasks(): void {

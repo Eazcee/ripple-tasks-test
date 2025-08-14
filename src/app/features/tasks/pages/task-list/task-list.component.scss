@@ -23,6 +23,15 @@
   color: #2d3748;
 }
 
+.search-field {
+  width: 300px;
+  margin-left: 16px;
+}
+
+.search-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
 .bulk-action-bar {
   display: flex;
   justify-content: space-between;
