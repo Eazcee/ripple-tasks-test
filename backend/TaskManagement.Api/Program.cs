@@ -18,9 +18,18 @@ var app = builder.Build();
 app.UseCors("frontend");
 app.MapControllers();
 
-// Ensure the app listens on port 80 for Docker
-app.Urls.Clear();
-app.Urls.Add("http://0.0.0.0:80");
+// Configure listening URLs based on environment
+if (builder.Environment.IsDevelopment())
+{
+    // Use launchSettings.json configuration for development
+    // This will use port 5113 as defined in launchSettings.json
+}
+else
+{
+    // Ensure the app listens on port 80 for Docker
+    app.Urls.Clear();
+    app.Urls.Add("http://0.0.0.0:80");
+}
 
 // Initialize database
 using (var scope = app.Services.CreateScope())
