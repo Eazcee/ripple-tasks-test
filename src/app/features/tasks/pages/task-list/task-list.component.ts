@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatSortModule, MatSort } from '@angular/material/sort';
 import { RouterModule } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 import { Task } from '../../../../models/task.model';
@@ -35,6 +36,7 @@ import { Inject } from '@angular/core';
     MatDialogModule,
     MatProgressBarModule,
     MatSnackBarModule,
+    MatSortModule,
     RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -43,8 +45,11 @@ import { Inject } from '@angular/core';
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss'
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatSort) sort!: MatSort;
+  
   tasks: Task[] = [];
+  dataSource!: MatTableDataSource<Task>;
   displayedColumns: string[] = ['select', 'title', 'dueDate', 'priority', 'status', 'actions'];
   selectedTasks: Set<number> = new Set();
   isLoading = false;
@@ -59,11 +64,30 @@ export class TaskListComponent implements OnInit {
     this.loadAllTasks();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'title': return item.title.toLowerCase();
+        case 'dueDate': return new Date(item.dueDate).getTime();
+        case 'priority': 
+          const priorityOrder = { 'Low': 1, 'Medium': 2, 'High': 3 };
+          return priorityOrder[item.priority as keyof typeof priorityOrder] || 0;
+        case 'status': return item.status.toLowerCase();
+        default: return String(item[property as keyof Task] || '');
+      }
+    };
+  }
+
   loadAllTasks(): void {
     this.isLoading = true;
     this.taskService.getTasks().subscribe({
       next: (tasks) => {
         this.tasks = tasks;
+        this.dataSource = new MatTableDataSource(tasks);
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
         this.isLoading = false;
       },
       error: () => {
@@ -83,6 +107,10 @@ export class TaskListComponent implements OnInit {
           const dueDate = new Date(task.dueDate);
           return dueDate >= new Date() && dueDate <= sevenDaysFromNow;
         });
+        this.dataSource = new MatTableDataSource(this.tasks);
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
         this.isLoading = false;
       },
       error: () => {
@@ -99,6 +127,10 @@ export class TaskListComponent implements OnInit {
           const dueDate = new Date(task.dueDate);
           return dueDate < new Date() && task.status !== 'Completed';
         });
+        this.dataSource = new MatTableDataSource(this.tasks);
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
         this.isLoading = false;
       },
       error: () => {
@@ -122,6 +154,10 @@ export class TaskListComponent implements OnInit {
             return aPriority - bPriority; // Low to High
           }
         });
+        this.dataSource = new MatTableDataSource(this.tasks);
+        if (this.sort) {
+          this.dataSource.sort = this.sort;
+        }
         this.isLoading = false;
       },
       error: () => {
