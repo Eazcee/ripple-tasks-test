@@ -16,8 +16,8 @@ import { RouterModule } from '@angular/router';
       <span>Task Management System</span>
       <span class="spacer"></span>
       <button mat-button routerLink="/tasks" routerLinkActive="active">
-        <mat-icon>list</mat-icon>
-        Tasks
+        <mat-icon>home</mat-icon>
+        Home
       </button>
     </mat-toolbar>
 
