@@ -14,7 +14,7 @@ import { RouterModule, Router } from '@angular/router';
     <mat-sidenav-container class="sidenav-container">
       <mat-sidenav #drawer class="sidenav" fixedInViewport
           [attr.role]="'navigation'"
-          [mode]="'side'"
+          [mode]="isMobile ? 'over' : 'side'"
           [opened]="sidenavOpened">
         <mat-toolbar>Menu</mat-toolbar>
         <mat-nav-list>
@@ -80,12 +80,41 @@ import { RouterModule, Router } from '@angular/router';
     .active mat-icon {
       color: #1976d2;
     }
+    
+    /* Mobile responsive styles */
+    @media (max-width: 768px) {
+      .sidenav {
+        width: 280px;
+      }
+      
+      .container {
+        padding: 12px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .sidenav {
+        width: 260px;
+      }
+      
+      .container {
+        padding: 8px;
+      }
+    }
   `]
 })
 export class LayoutComponent {
   sidenavOpened = false;
+  isMobile = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.checkScreenSize();
+    window.addEventListener('resize', () => this.checkScreenSize());
+  }
+
+  private checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+  }
 
   toggleSidenav() {
     this.sidenavOpened = !this.sidenavOpened;
@@ -97,15 +126,20 @@ export class LayoutComponent {
    * If already on the target route, just closes the sidenav
    */
   onNavigationClick() {
-    // Check if we're already on the tasks page
-    if (this.router.url === '/tasks') {
-      // Already on home page, just close the sidenav
+    // Always close sidenav on mobile for better UX
+    if (this.isMobile) {
       this.sidenavOpened = false;
     } else {
-      // Navigate and close sidenav after a short delay
-      setTimeout(() => {
+      // On desktop, check if we're already on the tasks page
+      if (this.router.url === '/tasks') {
+        // Already on home page, just close the sidenav
         this.sidenavOpened = false;
-      }, 150);
+      } else {
+        // Navigate and close sidenav after a short delay
+        setTimeout(() => {
+          this.sidenavOpened = false;
+        }, 150);
+      }
     }
   }
 }
