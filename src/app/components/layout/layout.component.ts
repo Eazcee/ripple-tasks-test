@@ -109,11 +109,20 @@ export class LayoutComponent {
 
   constructor(private router: Router) {
     this.checkScreenSize();
-    window.addEventListener('resize', () => this.checkScreenSize());
+    // Only add event listener in browser environment
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', () => this.checkScreenSize());
+    }
   }
 
   private checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768;
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      this.isMobile = window.innerWidth <= 768;
+    } else {
+      // Default to desktop for SSR
+      this.isMobile = false;
+    }
   }
 
   toggleSidenav() {
