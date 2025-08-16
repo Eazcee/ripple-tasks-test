@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
+import { ConfirmationDialogComponent, ConfirmationDialogData } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-task-list',
@@ -276,28 +277,45 @@ export class TaskListComponent implements OnInit, AfterViewInit {
    * @param id - The ID of the task to delete
    */
   deleteTask(id: number): void {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.taskService.deleteTask(id).subscribe({
-        next: () => {
-          this.loadAllTasks(); // Reload tasks after deletion
-          this.snackBar.open('Task deleted successfully', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'end',
-            verticalPosition: 'top',
-            panelClass: ['success-snackbar']
-          });
-        },
-        error: (error) => {
-          console.error('Error deleting task:', error);
-          this.snackBar.open('Failed to delete task. Please try again.', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'end',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar']
-          });
-        }
-      });
-    }
+    const dialogData: ConfirmationDialogData = {
+      title: 'Delete Task',
+      message: 'Are you sure you want to delete this task? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '90vw',
+      maxWidth: '600px',
+      data: dialogData,
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.taskService.deleteTask(id).subscribe({
+          next: () => {
+            this.loadAllTasks(); // Reload tasks after deletion
+            this.snackBar.open('Task deleted successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar']
+            });
+          },
+          error: (error) => {
+            console.error('Error deleting task:', error);
+            this.snackBar.open('Failed to delete task. Please try again.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
+      }
+    });
   }
 
   /**

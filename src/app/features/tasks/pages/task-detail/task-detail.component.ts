@@ -9,9 +9,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Task } from '../../../../models/task.model';
 import { TaskService } from '../../../../services/task.service';
+import { ConfirmationDialogComponent, ConfirmationDialogData } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 /**
  * Component for displaying detailed information about a specific task.
@@ -31,7 +33,8 @@ import { TaskService } from '../../../../services/task.service';
     MatNativeDateModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss'
@@ -64,7 +67,8 @@ export class TaskDetailComponent implements OnInit {
     private router: Router,
     private taskService: TaskService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.editForm = this.fb.group({
       title: ['', Validators.required],
@@ -217,29 +221,45 @@ export class TaskDetailComponent implements OnInit {
   deleteTask(): void {
     if (!this.task?.id) return;
 
-    // Show confirmation dialog
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.taskService.deleteTask(this.task.id).subscribe({
-        next: () => {
-          // Navigate back to task list after successful deletion
-          this.router.navigate(['/tasks']);
-          this.snackBar.open('Task deleted successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
-        },
-        error: (err: any) => {
-          this.handleError('Failed to delete task');
-          console.error('Error deleting task:', err);
-          this.snackBar.open('Failed to delete task. Please try again.', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
-        }
-      });
-    }
+    const dialogData: ConfirmationDialogData = {
+      title: 'Delete Task',
+      message: 'Are you sure you want to delete this task? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '90vw',
+      maxWidth: '600px',
+      data: dialogData,
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && this.task?.id) {
+        this.taskService.deleteTask(this.task.id).subscribe({
+          next: () => {
+            // Navigate back to task list after successful deletion
+            this.router.navigate(['/tasks']);
+            this.snackBar.open('Task deleted successfully!', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
+            });
+          },
+          error: (err: any) => {
+            this.handleError('Failed to delete task');
+            console.error('Error deleting task:', err);
+            this.snackBar.open('Failed to delete task. Please try again.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
+            });
+          }
+        });
+      }
+    });
   }
 
   /**
