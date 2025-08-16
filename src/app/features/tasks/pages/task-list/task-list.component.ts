@@ -126,11 +126,13 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   /**
    * Applies filter to the table based on search input
    * Filters tasks by title in real-time as user types
+   * Works for both desktop table and mobile card views
    * @param event - Input event from search field
    */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.searchTerm = filterValue.trim().toLowerCase();
+    this.dataSource.filter = this.searchTerm;
   }
 
   /**
@@ -254,6 +256,19 @@ export class TaskListComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
       }
     });
+  }
+
+  /**
+   * Gets filtered tasks for mobile view based on search term
+   * @returns Filtered array of tasks
+   */
+  get filteredTasks(): Task[] {
+    if (!this.searchTerm) {
+      return this.tasks;
+    }
+    return this.tasks.filter(task => 
+      task.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
   }
 
   /**
