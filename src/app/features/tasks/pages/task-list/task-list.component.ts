@@ -13,7 +13,7 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 import { Task } from '../../../../models/task.model';
 
@@ -75,7 +75,8 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     private taskService: TaskService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.bulkStatusForm = this.fb.group({
       status: ['', Validators.required]
@@ -270,6 +271,16 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     return this.tasks.filter(task => 
       task.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  /**
+   * Navigates to the task detail page
+   * @param id - The ID of the task to view
+   */
+  navigateToTaskDetail(id: number | undefined): void {
+    if (id !== undefined) {
+      this.router.navigate(['/tasks', id]);
+    }
   }
 
   /**

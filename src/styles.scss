@@ -61,3 +61,35 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     padding: 8px 0;
   }
 }
+
+/* Global table row hover effects */
+.mat-mdc-table .mat-mdc-row.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mat-mdc-table .mat-mdc-row.clickable-row:hover {
+  background-color: #e3f2fd !important;
+}
+
+.mat-mdc-table .mat-mdc-row.clickable-row:active {
+  background-color: #bbdefb !important;
+}
+
+/* Additional specificity for Material Design */
+.mat-mdc-table tbody tr.clickable-row:hover {
+  background-color: #e3f2fd !important;
+}
+
+.mat-mdc-table tbody tr.clickable-row:active {
+  background-color: #bbdefb !important;
+}
+
+/* Direct element targeting */
+tr.clickable-row:hover {
+  background-color: #e3f2fd !important;
+}
+
+tr.clickable-row:active {
+  background-color: #bbdefb !important;
+}

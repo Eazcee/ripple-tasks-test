@@ -88,6 +88,39 @@ table {
   width: 100%;
 }
 
+// Clickable row styling
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+// Force hover effect with more specific selectors
+.mat-mdc-table .mat-mdc-row.clickable-row:hover {
+  background-color: #e3f2fd !important;
+}
+
+.mat-mdc-table .mat-mdc-row.clickable-row:active {
+  background-color: #bbdefb !important;
+}
+
+// Additional specificity for Material Design
+.mat-mdc-table tbody tr.clickable-row:hover {
+  background-color: #e3f2fd !important;
+}
+
+.mat-mdc-table tbody tr.clickable-row:active {
+  background-color: #bbdefb !important;
+}
+
+// Direct element targeting as fallback
+tr.clickable-row:hover {
+  background-color: #e3f2fd !important;
+}
+
+tr.clickable-row:active {
+  background-color: #bbdefb !important;
+}
+
 // Pagination styling
 mat-paginator {
   margin-top: 16px;
@@ -266,6 +299,19 @@ mat-dialog-actions button {
     padding: 16px;
     margin-bottom: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-task-card:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .mobile-task-card:active {
+    background-color: #e9ecef;
+    transform: translateY(0);
   }
 
   .mobile-task-header {
