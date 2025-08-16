@@ -127,3 +127,38 @@
     <mat-icon>add</mat-icon>
   </button>
 </div>
+
+<!-- Bulk Update Status Dialog Template -->
+<ng-template #bulkUpdateStatusDialog>
+  <h2 mat-dialog-title>Update Status</h2>
+  <mat-dialog-content>
+    <p class="summary-text">You're updating {{ bulkDialogData.taskCount }} task(s).</p>
+    
+    <form [formGroup]="bulkStatusForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option value="Pending">Pending</mat-option>
+          <mat-option value="InProgress">In Progress</mat-option>
+          <mat-option value="Completed">Completed</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    <div *ngIf="bulkDialogError" class="error-message">
+      {{ bulkDialogError }}
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancelBulkUpdate()" [disabled]="isBulkUpdating">Cancel</button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="confirmBulkUpdate()" 
+      [disabled]="!bulkStatusForm.valid || isBulkUpdating">
+      <mat-spinner *ngIf="isBulkUpdating" diameter="16" class="spinner"></mat-spinner>
+      {{ isBulkUpdating ? 'Updating...' : 'Update' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>

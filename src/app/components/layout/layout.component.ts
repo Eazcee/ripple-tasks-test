@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -18,7 +18,7 @@ import { RouterModule } from '@angular/router';
           [opened]="sidenavOpened">
         <mat-toolbar>Menu</mat-toolbar>
         <mat-nav-list>
-          <a mat-list-item routerLink="/tasks" routerLinkActive="active">
+          <a mat-list-item routerLink="/tasks" routerLinkActive="active" (click)="onNavigationClick()">
             <mat-icon matListItemIcon>home</mat-icon>
             <span matListItemTitle>Home</span>
           </a>
@@ -72,14 +72,40 @@ import { RouterModule } from '@angular/router';
     }
     
     .active {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.15);
+      border-left: 4px solid #1976d2;
+      font-weight: 500;
+    }
+    
+    .active mat-icon {
+      color: #1976d2;
     }
   `]
 })
 export class LayoutComponent {
   sidenavOpened = false;
 
+  constructor(private router: Router) {}
+
   toggleSidenav() {
     this.sidenavOpened = !this.sidenavOpened;
+  }
+
+  /**
+   * Handles navigation clicks in the sidenav
+   * Closes the sidenav after navigation for better UX
+   * If already on the target route, just closes the sidenav
+   */
+  onNavigationClick() {
+    // Check if we're already on the tasks page
+    if (this.router.url === '/tasks') {
+      // Already on home page, just close the sidenav
+      this.sidenavOpened = false;
+    } else {
+      // Navigate and close sidenav after a short delay
+      setTimeout(() => {
+        this.sidenavOpened = false;
+      }, 150);
+    }
   }
 }

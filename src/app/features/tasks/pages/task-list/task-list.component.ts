@@ -16,11 +16,11 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { TaskService } from '../../../../services/task.service';
 import { Task } from '../../../../models/task.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 
 @Component({
@@ -53,6 +53,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   // ViewChild decorators to access Material table sorting and pagination
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('bulkUpdateStatusDialog') bulkUpdateStatusDialog!: any;
   
   // Component properties
   tasks: Task[] = []; // Array to store all tasks
@@ -61,12 +62,24 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   selectedTasks: Set<number> = new Set(); // Set to track selected tasks for bulk operations
   isLoading = false; // Loading state flag
   searchTerm = ''; // Search term for filtering tasks
+  
+  // Bulk update dialog properties
+  bulkStatusForm: FormGroup;
+  isBulkUpdating = false;
+  bulkDialogError = '';
+  bulkDialogData: { taskCount: number; taskIds: number[] } = { taskCount: 0, taskIds: [] };
+  bulkDialogRef: MatDialogRef<any> | null = null;
 
   constructor(
     private taskService: TaskService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder
+  ) {
+    this.bulkStatusForm = this.fb.group({
+      status: ['', Validators.required]
+    });
+  }
 
   /**
    * Lifecycle hook: Called after data-bound properties are initialized
@@ -359,20 +372,51 @@ export class TaskListComponent implements OnInit, AfterViewInit {
    */
   openBulkUpdateStatusDialog(): void {
     const selectedTaskIds = Array.from(this.selectedTasks);
-    const dialogRef = this.dialog.open(BulkUpdateStatusDialogComponent, {
+    this.bulkDialogData = {
+      taskCount: selectedTaskIds.length,
+      taskIds: selectedTaskIds
+    };
+    
+    // Reset form and error state
+    this.bulkStatusForm.reset();
+    this.bulkDialogError = '';
+    this.isBulkUpdating = false;
+    
+    // Open dialog using template
+    this.bulkDialogRef = this.dialog.open(this.bulkUpdateStatusDialog, {
       width: '400px',
-      data: {
-        taskCount: selectedTaskIds.length,
-        taskIds: selectedTaskIds
-      }
+      disableClose: true
     });
+  }
 
-    // Handle dialog result
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.performBulkStatusUpdate(selectedTaskIds, result.status);
+  /**
+   * Cancels the bulk update operation
+   */
+  cancelBulkUpdate(): void {
+    if (this.bulkDialogRef) {
+      this.bulkDialogRef.close();
+    }
+  }
+
+  /**
+   * Confirms the bulk update operation
+   */
+  confirmBulkUpdate(): void {
+    if (this.bulkStatusForm.valid) {
+      this.isBulkUpdating = true;
+      this.bulkDialogError = '';
+      
+      const newStatus = this.bulkStatusForm.value.status;
+      const selectedTaskIds = this.bulkDialogData.taskIds;
+      
+      // Perform the bulk update
+      this.performBulkStatusUpdate(selectedTaskIds, newStatus);
+      
+      // Close dialog after successful update
+      if (this.bulkDialogRef) {
+        this.bulkDialogRef.close();
       }
-    });
+    }
   }
 
   /**
@@ -403,129 +447,4 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 }
 
-// ===== BULK UPDATE STATUS DIALOG COMPONENT =====
 
-/**
- * Dialog component for bulk updating task status
- * 
- * Features:
- * - Form validation for status selection
- * - Loading state during update
- * - Error handling and display
- * - Summary of tasks being updated
- */
-@Component({
-  selector: 'app-bulk-update-status-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatProgressSpinnerModule
-  ],
-  template: `
-    <h2 mat-dialog-title>Update Status</h2>
-    <mat-dialog-content>
-      <p class="summary-text">You're updating {{ data.taskCount }} task(s).</p>
-      
-      <form [formGroup]="statusForm">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status" required>
-            <mat-option value="Pending">Pending</mat-option>
-            <mat-option value="InProgress">In Progress</mat-option>
-            <mat-option value="Completed">Completed</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
-    </mat-dialog-content>
-    
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()" [disabled]="isUpdating">Cancel</button>
-      <button 
-        mat-raised-button 
-        color="primary" 
-        (click)="onUpdate()" 
-        [disabled]="!statusForm.valid || isUpdating">
-        <mat-spinner *ngIf="isUpdating" diameter="16" class="spinner"></mat-spinner>
-        {{ isUpdating ? 'Updating...' : 'Update' }}
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: [`
-    .summary-text {
-      margin-bottom: 16px;
-      color: #666;
-      font-size: 14px;
-    }
-    
-    .full-width {
-      width: 100%;
-    }
-    
-    .error-message {
-      color: #f44336;
-      font-size: 14px;
-      margin-top: 8px;
-    }
-    
-    .spinner {
-      margin-right: 8px;
-    }
-    
-    mat-dialog-actions button {
-      min-width: 80px;
-    }
-  `]
-})
-export class BulkUpdateStatusDialogComponent {
-  // Component properties
-  statusForm: FormGroup; // Form for status selection
-  isUpdating = false; // Loading state flag
-  errorMessage = ''; // Error message display
-
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<BulkUpdateStatusDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { taskCount: number; taskIds: number[] }
-  ) {
-    // Initialize form with required validation
-    this.statusForm = this.fb.group({
-      status: ['', Validators.required]
-    });
-  }
-
-  /**
-   * Handles cancel button click
-   * Closes the dialog without performing any action
-   */
-  onCancel(): void {
-    this.dialogRef.close();
-  }
-
-  /**
-   * Handles update button click
-   * Validates form and closes dialog with selected status
-   */
-  onUpdate(): void {
-    if (this.statusForm.valid) {
-      this.isUpdating = true;
-      this.errorMessage = '';
-      
-      // Simulate API call delay for better UX
-      setTimeout(() => {
-        this.isUpdating = false;
-        this.dialogRef.close({
-          status: this.statusForm.value.status
-        });
-      }, 1000);
-    }
-  }
-}

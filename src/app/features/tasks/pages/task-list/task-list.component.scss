@@ -158,3 +158,29 @@ mat-paginator {
   bottom: 24px;
   right: 24px;
 }
+
+// ===== BULK UPDATE STATUS DIALOG STYLES =====
+
+.summary-text {
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.spinner {
+  margin-right: 8px;
+}
+
+mat-dialog-actions button {
+  min-width: 80px;
+}
