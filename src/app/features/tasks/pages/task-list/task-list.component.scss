@@ -184,3 +184,200 @@ mat-paginator {
 mat-dialog-actions button {
   min-width: 80px;
 }
+
+// ===== MOBILE RESPONSIVE STYLES =====
+// These styles only apply to mobile devices (max-width: 768px)
+
+@media (max-width: 768px) {
+  .task-list-container {
+    padding: 12px;
+  }
+
+  .task-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .task-list-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .header-controls {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .mobile-sort-button {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .search-field {
+    flex: 1;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .bulk-action-bar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .bulk-action-info {
+    justify-content: center;
+  }
+
+  .bulk-action-buttons {
+    justify-content: center;
+  }
+
+  .bulk-action-buttons button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  // Hide table on mobile and show card layout instead
+  table {
+    display: none !important;
+  }
+
+  // Mobile card layout
+  .mobile-task-cards {
+    display: block !important;
+  }
+
+  .mobile-no-tasks {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+  }
+
+  .mobile-no-tasks p {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .mobile-task-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-task-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .mobile-task-checkbox {
+    flex-shrink: 0;
+  }
+
+  .mobile-task-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #2d3748;
+    flex: 1;
+  }
+
+  .mobile-task-actions {
+    display: flex;
+    gap: 4px;
+  }
+
+  .mobile-task-actions button {
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .mobile-task-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .mobile-task-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-task-label {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .mobile-task-value {
+    font-size: 0.875rem;
+    color: #2d3748;
+  }
+
+  .mobile-task-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mobile-task-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  // Mobile pagination
+  mat-paginator {
+    margin-top: 12px;
+  }
+
+  // Mobile FAB button
+  .fab-button {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  // Mobile dialog adjustments
+  .summary-text {
+    font-size: 0.875rem;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  mat-dialog-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  mat-dialog-actions button {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+// Hide mobile cards on desktop
+.mobile-task-cards {
+  display: none;
+}
+
+// Desktop header controls
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobile-sort-button {
+  display: none;
+}
