@@ -133,3 +133,6 @@ C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\TaskManagement.Api\o
 C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\TaskManagement.Api\obj\Debug\net8.0\TaskManagement.Api.pdb
 C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\TaskManagement.Api\obj\Debug\net8.0\TaskManagement.Api.genruntimeconfig.cache
 C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\TaskManagement.Api\obj\Debug\net8.0\ref\TaskManagement.Api.dll
+C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\taskmanagement.api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\taskmanagement.api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\EdgarPC\Documents\GitHub\ripple-tasks-test\backend\taskmanagement.api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
