@@ -277,8 +277,25 @@ export class TaskListComponent implements OnInit, AfterViewInit {
    */
   deleteTask(id: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
-      this.taskService.deleteTask(id).subscribe(() => {
-        this.loadAllTasks(); // Reload tasks after deletion
+      this.taskService.deleteTask(id).subscribe({
+        next: () => {
+          this.loadAllTasks(); // Reload tasks after deletion
+          this.snackBar.open('Task deleted successfully', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
+          });
+        },
+        error: (error) => {
+          console.error('Error deleting task:', error);
+          this.snackBar.open('Failed to delete task. Please try again.', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar']
+          });
+        }
       });
     }
   }
