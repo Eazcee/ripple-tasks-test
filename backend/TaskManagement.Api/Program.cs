@@ -37,6 +37,16 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger";
     });
 }
+else
+{
+    // Enable Swagger in all environments for easier testing
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Management API V1");
+        c.RoutePrefix = "swagger";
+    });
+}
 
 app.UseCors("frontend");
 app.MapControllers();
